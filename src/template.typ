@@ -1,7 +1,6 @@
 #import "colorbox.typ": *
 #import "@preview/subpar:0.2.1" // 子图包
-#import "@preview/tablex:0.0.6": tablex, hlinex
-#import "@preview/tablem:0.1.0": tablem
+#import "@preview/numbly:0.1.0": numbly
 
 // 页面全局设置
 #set page(
@@ -12,6 +11,26 @@
     bottom: 20mm,
   ),
 )
+#set page(header: [#align(center)[华东师范大学软件工程学院实验报告] #v(-0.2cm)] + line(length: 100%))
+#set page(
+  footer: line(length: 100%)
+    + context {
+      if counter(page).at(here()).first() == 0 { return }
+      let page-number = counter(page).at(here()).first()
+      [
+        #if calc.odd(page-number) {
+          align(left)[_In Typst By_ #link("github.com/Shichien", $scr(D)scr(e)scr(r)scr(a)scr(l)scr(i)scr(v)scr(e)$)]
+          v(-2em)
+          align(right)[#counter(page).display("第 1 页，共 1 页", both: true)] // 奇数页靠右
+        } else {
+          align(left)[#counter(page).display("第 1 页，共 1 页", both: true)] // 偶数页靠左
+          v(-2em)
+          align(right)[_In Typst By_ #link("github.com/Shichien", $scr(D)scr(e)scr(r)scr(a)scr(l)scr(i)scr(v)scr(e)$)]
+        }
+      ]
+    },
+)
+
 
 // 字体设置 - 增加粗体显示
 // https://csimide.github.io/cuti-docs/zh-CN/fakebold.html
@@ -50,20 +69,6 @@
 #show enum.item: it => it + fakepar
 #show list.item: it => it + fakepar // 列表后缩进
 
-// 页眉页脚设置
-#import "@preview/chic-hdr:0.4.0": *
-#show: chic.with(
-  chic-header(center-side: smallcaps("华东师范大学软件工程学院实验报告")),
-  chic-footer(
-    left-side: strong("In Typst By " + link("github.com/Shichien", $scr(D)scr(e)scr(r)scr(a)scr(l)scr(i)scr(v)scr(e)$)),
-    right-side: "第" + chic-page-number() + "页，共" + context [#counter(page).final().at(0)] + "页",
-  ),
-  // 获取总页数：https://github.com/typst/typst/discussions/2720
-  chic-separator(on: "header", chic-styled-separator("bold-center")),
-  chic-separator(on: "footer", chic-styled-separator("flower-end")),
-  chic-offset(10pt),
-)
-
 // 代码块设置
 // https://typst.app/universe/package/codly-languages
 #import "@preview/codly:1.2.0": * // 代码高亮包
@@ -95,17 +100,12 @@
 
 // 目录设置
 #show outline: set heading(numbering: none)
-#show outline: set par(first-line-indent: 0em)
+#show outline.entry.where(level: 1): set block(above: 1.35em)
 #show outline.entry.where(level: 1): it => {
   // 一级标题加粗
   text(font: ("Times New Roman", "SimSun"))[#strong[#it]]
 }
-#show outline.entry: it => {
-  // 其余标题不变
-  h(1em)
-  text(font: ("Times New Roman", "SimSun"))[#it]
-}
-#set par(leading: 9pt) // 设置目录行的间距
+#show outline.entry.where(level: 2): set block(above: 1em)
 
 // 本行设置仅会影响目录中序号的间距，而不影响正文中的序号间距
 #set heading(numbering: "1.1.1   ")
@@ -152,7 +152,7 @@
 
 // 导言区结束，正文开始 ——————————————————————
 
-#v(30pt)
+#v(30pt) <front-matter>
 
 #align(
   center,
@@ -165,20 +165,23 @@
 
 #table(
   columns: (1fr,) + 3 * (auto,),
-  rows: 4,
+  rows: 3,
   align: left + horizon,
   stroke: (x, y) => {
     (top: if y == 0 { 0.45pt + black })
-    (bottom: if y == 2 { 0.45pt + black })
+    (bottom: if y == 3 { 0.45pt + black })
   },
-  [课程名称：], [指导教师：], [], [],
-  [姓名：], [学号：10235101], [], [实践编号：（）],
-  [实践日期：2025/], [实践名称：], [#h(3.6cm)], [实践时间：2 学时],
+  [课程名称：], [年级：], [#h(2.1cm)], [上机实践成绩：],
+  [指导教师：], [姓名：], [], [],
+  [上机实践名称：], [学号：3141592653], [], [上机实践日期：2025/03/11],
+  [上机实践编号：（1）], [组号：], [], [上机实践时间：2学时],
 )
 
-// 不为目录编号
-#heading(outlined: false, numbering: none, "目录")
-#outline(title: none, indent: 2em, depth: 2)
+#outline(
+  title: [目录],
+  indent: 2em,
+  depth: 2,
+)
 
 // 正文部分 --------------------------------------
 
@@ -193,7 +196,7 @@
 #columns(2)[
   === 使用引用
 
-  在尾部添加 \<Head> 标签后，在任意位置即可使用 \@ 符号引用 @Head.
+  在尾部添加 \<Head> 标签后，在任意位置即可使用 \@ 符号引用。
 
   === 添加参考文献
 
@@ -226,12 +229,12 @@
 
 === 添加图片
 
+#align(center, image("../icons/image.png", width: 30%))
+
 #figure(
-  image("../icons/Head.jpg", width: 30%),
-  caption: [
-    使用标记文本（内容块）也可以为图片添加标题
-  ],
-) <Head>
+  image("../icons/image.png", width: 30%),
+  caption: [这是一张图片],
+)
 
 === 添加代码块
 
@@ -250,7 +253,7 @@ fn main() {
   + Linux Ubuntu 22.04.
 - 使用 `-` 来构建无序列表
 
-#CrossLine
+// #CrossLine
 
 == 多种短块样式
 
@@ -400,166 +403,6 @@ This is #amazed("Stars For You", color: purple).
   ],
 )[可以传入脚注][继续传入脚注]
 
-= 实验环境
-
-#show table.cell.where(x: 0): set text(style: "italic") // 第一列表列斜体处理
-#show table.cell.where(y: 0): set text(style: "normal", weight: "bold") // 第一行表头加粗处理
-
-#align(right)[
-  #table(
-    columns: 2,
-    stroke: (y: none), // 仅保留 Y 方向 描边
-    align: horizon,
-    [☒], [Close cabin door],
-    [☐], [Start engines],
-    table.hline(), // 在 X 轴方向添加一条描边
-    [☐], [Radio tower],
-    [☐], [Push back],
-  )
-]
-
-#{
-  set table(align: (x, _) => if x == 0 { left } else { right })
-  show table.cell.where(x: 0): smallcaps
-  table(
-    columns: (auto, 1fr, 1fr, 1fr),
-    // 1fr 可以提供满页的自动调整布局
-    table.vline(x: 1, start: 1),
-    table.header[Trainset][Top Speed][Length][Weight],
-    [TGV Réseau], [320 km/h], [200m], [383t],
-    [ICE 403], [330 km/h], [201m], [409t],
-    [Shinkansen N700], [300 km/h], [405m], [700t],
-  )
-}
-
-#align(center)[
-  #set table(stroke: (_, y) => if y == 0 { (top: 1pt, bottom: 0.5pt) })
-  #table(
-    columns: 3,
-    align: center + horizon,
-    table.header[Technique][Advantage][Drawback],
-    [Diegetic], [Immersive], [May be contrived],
-    [Extradiegetic], [Breaks immersion], [Obtrusive],
-    [Omitted], [Fosters engagement], [May fracture audience],
-    table.hline(),
-  )
-]
-
-#figure(
-  caption: [Training regimen for Marathon],
-  table(
-    columns: 3,
-    fill: (_, y) => if y == 0 { gray.lighten(75%) },
-    table.header[Week][Distance (km)][Time (hh:mm:ss)],
-    [1], [5], [00:30:00],
-    [2], [7], [00:45:00],
-    [3], [10], [01:00:00],
-    [4], [12], [01:10:00],
-    [5], [15], [01:25:00],
-    [6], [18], [01:40:00],
-    [7], [20], [01:50:00],
-    [8], [22], [02:00:00],
-    [...], [...], [...],
-    table.footer[_Goal_][_42.195_][_02:45:00_],
-  ),
-)
-
-#let ofi = [Office]
-#let rem = [_Remote_]
-#let lea = [*On leave*]
-
-#table(
-  columns: 6 * (1fr,),
-  align: (x, y) => if x == 0 or y == 0 { left } else { center },
-  stroke: (x, y) => (
-    // Separate black cells with white strokes.
-    left: if y == 0 and x > 0 { white } else { black },
-    rest: black,
-  ),
-  fill: (_, y) => if y == 0 { black },
-
-  table.header(
-    [Team member],
-    [Monday],
-    [Tuesday],
-    [Wednesday],
-    [Thursday],
-    [Friday],
-  ),
-  [Evelyn Archer],
-  table.cell(colspan: 2, ofi),
-  table.cell(colspan: 2, rem),
-  ofi,
-  [Lila Montgomery],
-  table.cell(colspan: 5, lea),
-  [Nolan Pearce],
-  rem,
-  table.cell(colspan: 2, ofi),
-  rem,
-  ofi,
-)
-
-#let rainbow_stroke = stroke(2pt + gradient.linear(..color.map.plasma))
-#show table: it => block(stroke: rainbow_stroke, radius: 2em, clip: true, it)
-
-#table(
-  columns: (1fr,) * 5,
-  rows: 3em,
-  stroke: rainbow_stroke,
-  align: (x, y) => {
-    if (calc.odd(x + y)) {
-      left + top
-    } else {
-      right + bottom
-    }
-  },
-  [A], [B], [C], [D], [E],
-  [F], [G], [H], [I], [J],
-  [K], [L], [M], [N], [O],
-  [P], [Q], [R], [S], [T],
-  [U], [V], [W], [X], [Y],
-  [Z],
-)
-
-= 实验过程与分析
-
-#subpar.grid(
-  figure(
-    image("../assets/andromeda.jpg"),
-    caption: [
-      An image of the andromeda galaxy.
-    ],
-  ),
-  <a>,
-  figure(
-    image("../assets/mountains.jpg"),
-    caption: [
-      A sunset illuminating the sky above a mountain range.
-    ],
-  ),
-  <b>,
-  columns: (1fr, 1fr),
-  // columns: (1fr, 1fr),
-  caption: [A figure composed of two sub figures.],
-  label: <full>,
-)
-
-Above in @full, we see a figure which is composed of two other figures, namely @a and @b.
-
-= 实验结果
-
-= 附录
-
-参考文献无需添加标题，直接使用 `#bibliography("ref.bib")` 即可引用。
-
-== 项目架构
-
-- chapters/
-  - chapter_1.typ
-  - chapter_2.typ
-- main.typ 👁 #text(gray)[← document entry point]
-- template.typ
-
+== 多种短块样式
 
 #bibliography("../ref.bib")
-

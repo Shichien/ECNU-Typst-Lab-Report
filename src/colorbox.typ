@@ -1,4 +1,4 @@
-#import "@preview/showybox:2.0.1": showybox
+#import "@preview/showybox:2.0.4": showybox
 #import "@preview/colorful-boxes:1.2.0": colorbox, slantedColorbox, outlinebox, stickybox
 
 // Colors from the official palette of the University of Strasbourg
