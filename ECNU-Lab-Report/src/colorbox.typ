@@ -369,7 +369,7 @@
 
 #let ADMONITION-TRANSLATIONS = (
   "task": ("en": "Task", "zh": "任务"),
-  "definition": ("en": "Definition", "zh": "定义"),
+  "answer": ("en": "Answer", "zh": "答案"),
   "brainstorming": ("en": "Brainstorming", "zh": "头脑风暴"),
   "question": ("en": "Question", "zh": "问题"),
 )
@@ -410,6 +410,7 @@
   let title = if title == none {
     (ADMONITION-TRANSLATIONS).at(figure-kind).at(lang)
   } else {
+    h(-2em)
     title
   }
 
@@ -435,7 +436,8 @@
         strong(
           text(
             fill: tertiary-color,
-            emoji + " " + smallcaps(title),
+            h(-2em) + emoji + " " + smallcaps(title),
+            // (Fixed): Typst(0.13.0) par(all: true) 导致的问题
           ),
         ),
       )
@@ -458,12 +460,12 @@
   ..args,
 )
 
-#let definition(body, ..args) = admonition(
+#let answer(body, ..args) = admonition(
   body,
   primary-color: i_ngreen.C,
   secondary-color: i_ngreen.C.lighten(90%),
   tertiary-color: i_ngreen.B,
-  figure-kind: "definition",
+  figure-kind: "answer",
   emoji: emoji.brain,
   ..args,
 )
@@ -487,6 +489,8 @@
   emoji: emoji.quest,
   ..args,
 )
+
+#let solution = rect.with(fill: luma(240), stroke: (left: 0.25em))
 
 // 分割线
 #let CrossLine = [
@@ -535,3 +539,36 @@
 #let amazed(term, color: blue) = {
   text(color, box[✨ #term ✨])
 }
+
+// 书本分割线
+#let partCrossline = [
+  \ \
+  #h(1fr)
+  $
+    #line(
+    start: (0em,-.15em),
+    end: (12em,-.15em),
+    stroke: (
+      cap: "round",
+      paint: gradient.linear(white,black,white)
+      )
+    )
+      #move(dx:.5em,dy:0em,"🙠")
+      #text(15pt)[🙣]
+      #h(0.4em)
+      #move(dy:-0.25em,text(12pt)[✢])
+      #h(0.4em)
+      #text(15pt)[🙡]
+      #move(dx:-.5em,dy:0em,"🙢")
+      #line(
+        start: (0em,-.15em),
+        end: (12em,-.15em),
+        stroke: (
+          cap: "round",
+          paint:gradient.linear(white,black,white)
+          )
+        )
+  $
+  #h(1fr)
+  \ \
+];

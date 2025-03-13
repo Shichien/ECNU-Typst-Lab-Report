@@ -1,7 +1,9 @@
 #import "colorbox.typ": *
+#import "@preview/mitex:0.2.5": *
 #import "@preview/subpar:0.2.1" // 子图包
 #import "@preview/numbly:0.1.0": numbly
 
+// ———————————————————————————————————————————————
 // 页面全局设置
 #set page(
   margin: (
@@ -10,20 +12,18 @@
     top: 15mm,
     bottom: 20mm,
   ),
-)
-#set page(header: [#align(center)[华东师范大学软件工程学院实验报告] #v(-0.2cm)] + line(length: 100%))
-#set page(
+  header: [#align(center)[华东师范大学软件工程学院实验报告] #v(-0.2cm)] + line(length: 100%),
   footer: line(length: 100%)
     + context {
       if counter(page).at(here()).first() == 0 { return }
       let page-number = counter(page).at(here()).first()
       [
         #if calc.odd(page-number) {
-          align(left)[_In Typst By_ #link("github.com/Shichien", $scr(D)scr(e)scr(r)scr(a)scr(l)scr(i)scr(v)scr(e)$)]
+          align(left)[ #h(-2em) _In Typst By_ #link("github.com/Shichien", $scr(D)scr(e)scr(r)scr(a)scr(l)scr(i)scr(v)scr(e)$)]
           v(-2em)
           align(right)[#counter(page).display("第 1 页，共 1 页", both: true)] // 奇数页靠右
         } else {
-          align(left)[#counter(page).display("第 1 页，共 1 页", both: true)] // 偶数页靠左
+          align(left)[ #h(-2em) #counter(page).display("第 1 页，共 1 页", both: true)] // 偶数页靠左
           v(-2em)
           align(right)[_In Typst By_ #link("github.com/Shichien", $scr(D)scr(e)scr(r)scr(a)scr(l)scr(i)scr(v)scr(e)$)]
         }
@@ -31,44 +31,81 @@
     },
 )
 
+// ———————————————————————————————————————————————
+// 段落设置
+#set par(
+  first-line-indent: (amount: 2em, all: true), // 全部首行缩进
+  // first-line-indent: 2em,
+  leading: 1em, // 行间距
+  spacing: 1.2em, // 段间距
+  hanging-indent: 0em, //除首行外的缩进
+)
 
+#set list(
+  tight: true, // 使用段落缩进
+  marker: ([•], [--], [>]),
+  indent: 1em,
+  body-indent: 0.8em,
+)
+
+#set enum(
+  tight: true, // 使用段落缩进
+  numbering: "1.1.",
+  indent: 1em,
+  body-indent: 0.5em,
+  full: true,
+)
+
+// Fixed (Typst 0.13 # Par(indent: (amount: 2em, all: true))))
+// 解决某些环境后首行缩进不显示的问题
+// // https://stormckey.github.io/PeiPei/typst
+// 使用 fakepar 方案将图表、列表等环境后的首行缩进问题解决
+// #let fakepar = context {
+//   let b = par(box())
+//   b
+//   v(-measure(b + b).height)
+// }
+
+// #show math.equation.where(block: true): it => it + fakepar
+// #show figure: it => it + fakepar // 图表后缩进
+// #show enum.item: it => it + fakepar
+// #show list.item: it => it + fakepar // 列表后缩进
+
+// 处理二级标题与上一段的间距
+// #show heading.where(level: 2): it => {
+//   v(0.5em)
+//   it
+// }
+
+// ———————————————————————————————————————————————
 // 字体设置 - 增加粗体显示
 // https://csimide.github.io/cuti-docs/zh-CN/fakebold.html
 #import "@preview/cuti:0.3.0": show-cn-fakebold
 #show: show-cn-fakebold
+// 中英文使用不同的字体
+// Typst: 0.13.0 改进：https://typst-doc-cn.github.io/guide/FAQ/lang-fonts.html
 #set text(
   size: 10pt,
-  font: ("Times New Roman", "SimSun"),
+  font: (
+    (name: "Times New Roman"),
+    "SimSun",
+  ),
   lang: "zh",
   region: "cn",
 )
 
-// 首行缩进
+// ———————————————————————————————————————————————
+// 标题设置
+// 标题标号与标题内容之间使用 0.75em 间距
 #show heading: it => box(width: 100%)[
   #set text(font: "Times New Roman")
-  #set par(first-line-indent: 0em) // 取消标题首行缩进
   #if it.numbering != none {
     counter(heading).display("1.1.1")
   }
-  #h(0.75em)
-  #it.body
+  #h(0.75em) #it.body
 ]
 
-#set par(first-line-indent: 2em)
-#let fakepar = context {
-  let b = par(box())
-  b
-  v(-measure(b + b).height)
-}
-
-// 解决首行缩进所带来的代码块问题
-// https://stormckey.github.io/PeiPei/typst
-#show math.equation.where(block: true): it => it + fakepar
-#show heading: it => it + fakepar // 标题后缩进
-#show figure: it => it + fakepar // 图表后缩进
-#show enum.item: it => it + fakepar
-#show list.item: it => it + fakepar // 列表后缩进
-
+// ———————————————————————————————————————————————
 // 代码块设置
 // https://typst.app/universe/package/codly-languages
 #import "@preview/codly:1.2.0": * // 代码高亮包
@@ -76,6 +113,7 @@
 #show: codly-init
 #codly(languages: codly-languages) //设置语言图标
 
+// ———————————————————————————————————————————————
 // 数学公式部分
 // 重置每个章节的公式计数器
 #show heading.where(level: 1): it => {
@@ -87,35 +125,34 @@
 #set math.equation(
   numbering: n => {
     numbering("(1.1)", counter(heading).get().first(), n)
-    // if you want change the number of number of displayed
-    // section numbers, modify it this way:
-    /*
-    let count = counter(heading).get()
-    let h1 = count.first()
-    let h2 = count.at(1, default: 0)
-    numbering("(1.1.1)", h1, h2, n)
-    */
   },
 )
 
-// 目录设置
+// ———————————————————————————————————————————————
+// 目录设置，设置目录不标号
 #show outline: set heading(numbering: none)
-#show outline.entry.where(level: 1): set block(above: 1.35em)
+
+// 一级目录加粗，二级目录加入 1em indent
 #show outline.entry.where(level: 1): it => {
-  // 一级标题加粗
+  set block(above: 1.35em)
   text(font: ("Times New Roman", "SimSun"))[#strong[#it]]
 }
-#show outline.entry.where(level: 2): set block(above: 1em)
+#show outline.entry.where(level: 2): it => {
+  set block(above: 1em)
+  it
+}
 
 // 本行设置仅会影响目录中序号的间距，而不影响正文中的序号间距
 #set heading(numbering: "1.1.1   ")
 
+// ———————————————————————————————————————————————
 // 超链接设置颜色和下划线
 #show link: {
   underline.with(stroke: rgb("#0074d9"), offset: 2pt)
 }
 #show link: set text(blue)
 
+// ———————————————————————————————————————————————
 // 图标设置
 #let icon(path) = box(
   baseline: 0.125em,
