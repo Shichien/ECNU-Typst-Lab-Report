@@ -1,3 +1,4 @@
+
 #import "colorbox.typ": *
 #import "@preview/mitex:0.2.5": *
 #import "@preview/subpar:0.2.1" // 子图包
@@ -5,6 +6,11 @@
 
 // ———————————————————————————————————————————————
 // 页面全局设置
+#set page(fill: white)
+// 解决源代码跳转的问题
+// "这个修复和这个 BUG 一样让人无法理解"
+// 来自 @OrangeX4 的解决方案
+
 #set page(
   margin: (
     left: 15mm,
@@ -215,7 +221,7 @@
 )
 
 #outline(
-  title: [目录],
+  title: [#h(-1em)目录],
   indent: 2em,
   depth: 2,
 )
