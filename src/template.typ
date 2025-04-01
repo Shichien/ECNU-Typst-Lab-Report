@@ -100,6 +100,16 @@
   region: "cn",
 )
 
+// CJK 换行问题修复
+// https://typst-doc-cn.github.io/guide/FAQ/chinese-remove-space.html
+#let han-or-punct = "[-\p{sc=Hani}。．，、：；！‼？⁇⸺——……⋯⋯～–—·・‧/／「」『』“”‘’（）《》〈〉【】〖〗〔〕［］｛｝＿﹏●•]"
+
+#show regex(han-or-punct + " " + han-or-punct): it => {
+  let (a, _, b) = it.text.clusters()
+  a + b
+}
+
+
 // ———————————————————————————————————————————————
 // 标题设置
 // 标题标号与标题内容之间使用 0.75em 间距
