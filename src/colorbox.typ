@@ -372,6 +372,8 @@
   "answer": ("en": "Answer", "zh": "答案"),
   "brainstorming": ("en": "Brainstorming", "zh": "头脑风暴"),
   "question": ("en": "Question", "zh": "问题"),
+  "tips": ("en": "Tips", "zh": "提示"),
+  "warning": ("en": "Warning", "zh": "注意"),
 )
 
 #import "@preview/frame-it:1.0.0": *
@@ -460,6 +462,16 @@
   ..args,
 )
 
+#let tips(body, ..args) = admonition(
+  body,
+  primary-color: i_blue.E,
+  secondary-color: i_blue.E.lighten(90%),
+  tertiary-color: i_blue.E,
+  figure-kind: "tips",
+  emoji: emoji.hand.write,
+  ..args,
+)
+
 #let answer(body, ..args) = admonition(
   body,
   primary-color: i_ngreen.C,
@@ -476,6 +488,16 @@
   secondary-color: i_orange.E.lighten(90%),
   tertiary-color: i_orange.E,
   figure-kind: "brainstorming",
+  emoji: emoji.lightbulb,
+  ..args,
+)
+
+#let warning(body, ..args) = admonition(
+  body,
+  primary-color: i_orange.E,
+  secondary-color: i_orange.E.lighten(90%),
+  tertiary-color: i_orange.E,
+  figure-kind: "warning",
   emoji: emoji.lightbulb,
   ..args,
 )
