@@ -79,10 +79,10 @@
 
 === 添加图片
 
-#align(center, image("../icons/image.png", width: 30%))
+#align(center, image("../icons/header.jpg", width: 30%))
 
 #figure(
-  image("../icons/image.png", width: 30%),
+  image("../icons/header.jpg", width: 30%),
   caption: [这是一张图片],
 )
 
