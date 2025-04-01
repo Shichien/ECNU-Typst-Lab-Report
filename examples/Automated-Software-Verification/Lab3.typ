@@ -1,5 +1,5 @@
-#import "../_Template/src/colorbox.typ": *
-#import "../_Template/src/preamble.typ": *
+#import "../../src/colorbox.typ": *
+#import "../../src/preamble.typ": *
 #show: template.with(header: "华东师范大学软件工程学院实验报告", author: "张梓卫")
 
 #v(30pt) <front-matter>
