@@ -1,5 +1,5 @@
 #import "@preview/showybox:2.0.4": showybox
-#import "@preview/colorful-boxes:1.2.0": colorbox, slantedColorbox, outlinebox, stickybox
+#import "@preview/colorful-boxes:1.2.0": colorbox, outlinebox, slantedColorbox, stickybox
 
 // Colors from the official palette of the University of Strasbourg
 // https://langagevisuel.unistra.fr/index.php?id=396
@@ -374,24 +374,10 @@
   "question": ("en": "Question", "zh": "问题"),
   "tips": ("en": "Tips", "zh": "提示"),
   "warning": ("en": "Warning", "zh": "注意"),
+  "error": ("en": "Error", "zh": "错误"),
+  "solution": ("en": "Solution", "zh": "解"),
 )
 
-#import "@preview/frame-it:1.0.0": *
-
-// You have to define the kinds of frames you need
-#let (theorem, lemma, definition, important) = make-frames(
-  // This identifies the counter used for all theorems in this definition
-  "counter-id",
-  theorem: ("Theorem",),
-  // You can provide a color or leave it out and it will be generated
-  lemma: ("Lemma", gray),
-  // For each frame kind, you have to provide its supplement title to be displayed
-  definition: ("Definition",),
-  // You can add as many as you want
-  important: ("Important", blue.lighten(25%)),
-)
-
-// 通用提示框函数
 #let admonition(
   body,
   title: none,
@@ -416,7 +402,6 @@
     title
   }
 
-  // 创建提示框内容
   block(
     width: 100%,
     height: auto,
@@ -445,18 +430,17 @@
       )
         + block(
           above: 0.8em,
-          text(size: 1.2em, fill: text-color, body),
+          text(size: 1em, fill: text-color, body),
         ),
     ),
   )
 }
 
-// 特定类型的提示框函数
 #let task(body, ..args) = admonition(
   body,
-  primary-color: i_blue.E,
-  secondary-color: i_blue.E.lighten(90%),
-  tertiary-color: i_blue.E,
+  primary-color: i_nblue.E,
+  secondary-color: i_nblue.E.lighten(90%),
+  tertiary-color: i_nblue.E,
   figure-kind: "task",
   emoji: emoji.hand.write,
   ..args,
@@ -468,7 +452,7 @@
   secondary-color: i_blue.E.lighten(90%),
   tertiary-color: i_blue.E,
   figure-kind: "tips",
-  emoji: emoji.hand.write,
+  emoji: emoji.key,
   ..args,
 )
 
@@ -478,25 +462,25 @@
   secondary-color: i_ngreen.C.lighten(90%),
   tertiary-color: i_ngreen.B,
   figure-kind: "answer",
-  emoji: emoji.brain,
+  emoji: emoji.a,
   ..args,
 )
 
 #let brainstorming(body, ..args) = admonition(
   body,
-  primary-color: i_orange.E,
-  secondary-color: i_orange.E.lighten(90%),
-  tertiary-color: i_orange.E,
+  primary-color: i_pink.E.lighten(60%),
+  secondary-color: i_pink.E.lighten(90%),
+  tertiary-color: i_pink.E,
   figure-kind: "brainstorming",
-  emoji: emoji.lightbulb,
+  emoji: emoji.brain,
   ..args,
 )
 
 #let warning(body, ..args) = admonition(
   body,
-  primary-color: i_orange.E,
-  secondary-color: i_orange.E.lighten(90%),
-  tertiary-color: i_orange.E,
+  primary-color: i_yellow.B,
+  secondary-color: i_yellow.B.lighten(90%),
+  tertiary-color: i_yellow.A.lighten(10%),
   figure-kind: "warning",
   emoji: emoji.lightbulb,
   ..args,
@@ -512,40 +496,47 @@
   ..args,
 )
 
-#let solution = rect.with(fill: luma(240), stroke: (left: 0.25em))
+#let error(body, ..args) = admonition(
+  body,
+  primary-color: i_orange.E,
+  secondary-color: i_orange.E.lighten(90%),
+  tertiary-color: i_orange.E,
+  figure-kind: "error",
+  emoji: emoji.explosion,
+  ..args,
+)
 
-// 分割线
-#let CrossLine = [
-  \ \
-  #h(1fr)
+#let solution(body, ..args) = admonition(
+  body,
+  primary-color: i_grey.E,
+  secondary-color: i_grey.E.lighten(90%),
+  tertiary-color: i_grey.E,
+  figure-kind: "solution",
+  emoji: emoji.key, // 也可以用 emoji.unlock (🔓) 或 emoji.check.mark (✅)
+  ..args,
+)
+
+#let CrossLine = block(above: 2em, below: 2em, width: 100%)[
+  #set align(center)
+  #set math.equation(numbering: none)
   $
-    #line(
-  start:(0em,-.15em),
-  end:(12em,-.15em),
-  stroke: (
-    cap: "round",
-    paint:gradient.linear(white,black,white)
-  )
-  )
-  #move(dx:.5em,dy:0em,"🙠")
+    #line(start: (0em, -.15em), end: (12em, -.15em), stroke: (
+      cap: "round",
+      paint: gradient.linear(white, black, white),
+    ))
+    #move(dx: .5em, dy: 0em, "🙠")
     #text(15pt)[🙣]
     #h(0.4em)
-    #move(dy:-0.25em,text(12pt)[✢])
+    #move(dy: -0.25em, text(12pt)[✢])
     #h(0.4em)
     #text(15pt)[🙡]
-    #move(dx:-.5em,dy:0em,"🙢")
-    #line(
-      start:(0em,-.15em),
-      end:(12em,-.15em),
-      stroke: (
-        cap: "round",
-        paint:gradient.linear(white,black,white)
-      )
-    )
+    #move(dx: -.5em, dy: 0em, "🙢")
+    #line(start: (0em, -.15em), end: (12em, -.15em), stroke: (
+      cap: "round",
+      paint: gradient.linear(white, black, white),
+    ))
   $
-  #h(1fr)
-  \ \
-];
+]
 
 // 书法字体设计，仅能传入一个字母
 // https://sitandr.github.io/typst-examples-book/book/snippets/math/calligraphic.html
@@ -553,44 +544,11 @@
   "normal",
   box({
     show math.equation: set text(stylistic-set: 1)
-    $cal(it)$
+    str(it).clusters().map(x => $cal(#x)$).join()
   }),
 )
 
 // 闪烁星星包裹体
 #let amazed(term, color: blue) = {
-  text(color, box[✨ #term ✨])
+  text(color, box[✨#term✨])
 }
-
-// 书本分割线
-#let partCrossline = [
-  \ \
-  #h(1fr)
-  $
-    #line(
-    start: (0em,-.15em),
-    end: (12em,-.15em),
-    stroke: (
-      cap: "round",
-      paint: gradient.linear(white,black,white)
-      )
-    )
-      #move(dx:.5em,dy:0em,"🙠")
-      #text(15pt)[🙣]
-      #h(0.4em)
-      #move(dy:-0.25em,text(12pt)[✢])
-      #h(0.4em)
-      #text(15pt)[🙡]
-      #move(dx:-.5em,dy:0em,"🙢")
-      #line(
-        start: (0em,-.15em),
-        end: (12em,-.15em),
-        stroke: (
-          cap: "round",
-          paint:gradient.linear(white,black,white)
-          )
-        )
-  $
-  #h(1fr)
-  \ \
-];
