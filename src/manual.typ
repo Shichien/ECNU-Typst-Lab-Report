@@ -93,18 +93,14 @@ int main() {
 
 = Other
 
-== 提供分割线
+== 分割线
 
 #CrossLine
 
-== 提供 #scr("SCR") 功能
+== #scr("SCR") 功能
 
 #scr("This is a sentence.")
 
-== 提供星星包裹
+== 星星包裹
 
 #amazed(color: blue)[Content]
-
-= Show 接口
-
-Windows 与 Linux 系统都能上 Github.

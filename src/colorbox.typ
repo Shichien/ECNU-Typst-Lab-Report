@@ -1,5 +1,6 @@
 #import "@preview/showybox:2.0.4": showybox
 #import "@preview/colorful-boxes:1.2.0": colorbox, outlinebox, slantedColorbox, stickybox
+#import "@preview/fontawesome:0.6.0": *
 
 // Colors from the official palette of the University of Strasbourg
 // https://langagevisuel.unistra.fr/index.php?id=396
@@ -393,7 +394,7 @@
 ) = {
   let lang = args.named().at("lang", default: "en")
   set text(font: ("libertinus serif", "KaiTi")) // color-box 字体
-
+  
   // 获取标题文本
   let title = if title == none {
     (ADMONITION-TRANSLATIONS).at(figure-kind).at(lang)
@@ -401,7 +402,7 @@
     h(-2em)
     title
   }
-
+  
   block(
     width: 100%,
     height: auto,
@@ -424,7 +425,6 @@
           text(
             fill: tertiary-color,
             h(-2em) + emoji + " " + smallcaps(title),
-            // (Fixed): Typst(0.13.0) par(all: true) 导致的问题
           ),
         ),
       )
@@ -442,7 +442,7 @@
   secondary-color: i_nblue.E.lighten(90%),
   tertiary-color: i_nblue.E,
   figure-kind: "task",
-  emoji: emoji.hand.write,
+  emoji: fa-rocket(),
   ..args,
 )
 
@@ -452,7 +452,7 @@
   secondary-color: i_blue.E.lighten(90%),
   tertiary-color: i_blue.E,
   figure-kind: "tips",
-  emoji: emoji.key,
+  emoji: fa-list(),
   ..args,
 )
 
@@ -462,7 +462,7 @@
   secondary-color: i_ngreen.C.lighten(90%),
   tertiary-color: i_ngreen.B,
   figure-kind: "answer",
-  emoji: emoji.a,
+  emoji: fa-key(),
   ..args,
 )
 
@@ -472,7 +472,7 @@
   secondary-color: i_pink.E.lighten(90%),
   tertiary-color: i_pink.E,
   figure-kind: "brainstorming",
-  emoji: emoji.brain,
+  emoji: fa-brain(),
   ..args,
 )
 
@@ -482,7 +482,7 @@
   secondary-color: i_yellow.B.lighten(90%),
   tertiary-color: i_yellow.A.lighten(10%),
   figure-kind: "warning",
-  emoji: emoji.lightbulb,
+  emoji: fa-triangle-exclamation(),
   ..args,
 )
 
@@ -492,7 +492,7 @@
   secondary-color: i_violet.E.lighten(90%),
   tertiary-color: i_violet.E,
   figure-kind: "question",
-  emoji: emoji.quest,
+  emoji: fa-q(),
   ..args,
 )
 
@@ -502,7 +502,7 @@
   secondary-color: i_orange.E.lighten(90%),
   tertiary-color: i_orange.E,
   figure-kind: "error",
-  emoji: emoji.explosion,
+  emoji: fa-bomb(),
   ..args,
 )
 
@@ -512,7 +512,7 @@
   secondary-color: i_grey.E.lighten(90%),
   tertiary-color: i_grey.E,
   figure-kind: "solution",
-  emoji: emoji.key, // 也可以用 emoji.unlock (🔓) 或 emoji.check.mark (✅)
+  emoji: fa-check-double(),
   ..args,
 )
 
