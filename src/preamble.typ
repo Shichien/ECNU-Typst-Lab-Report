@@ -6,7 +6,7 @@
 #import "@preview/cuti:0.4.0": show-cn-fakebold
 #import "@preview/codly:1.3.0": * // 代码高亮包
 #import "@preview/codly-languages:0.1.6": *
-#import "@preview/cjk-unbreak:0.2.2": remove-cjk-break-space // 解决 CJK 换行问题
+#import "@preview/cjk-unbreak:0.2.3": remove-cjk-break-space // 解决 CJK 换行问题
 #import "@preview/citegeist:0.2.0": load-bibliography // 解决引用缺失问题
 
 #let all-bib-entries() = {
